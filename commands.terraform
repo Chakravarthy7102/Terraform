@@ -1,0 +1,14 @@
+
+Complete Documnetation : https://www.terraform.io/cli/commands/plan
+
+1.this command intitalizes the terraform and downloads the "nessasary plugins related to the provisers in the .tf file".
+$ terraform init
+
+2.It runs a dry run on your code and show changes required by the current configuration
+The terraform plan command creates an execution plan, which lets you preview the changes that Terraform plans to make to your infrastructure. By default, when Terraform creates a plan it:
+
+Reads the current state of any already-existing remote objects to make sure that the Terraform state is up-to-date.
+Compares the current configuration to the prior state and noting any differences.
+Proposes a set of change actions that should, if applied, make the remote objects match the configuration.
+$ terraform plan
+
