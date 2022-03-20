@@ -1,8 +1,18 @@
-provider "aws" {
-  region     = "ap-northeast-1"
-  access_key = ""
-  secret_key = ""
+
+variable "region" {
 }
+variable "access_key" {
+}
+variable "secret_key" {
+}
+variable "subnet_prefix" {
+}
+provider "aws" {
+  region     = var.region
+  access_key = var.access_key
+  secret_key = var.secret_key
+}
+
 
 #create VPC
 resource "aws_vpc" "prod_vpc" {
@@ -46,11 +56,21 @@ resource "aws_route_table" "rt" {
 
 resource "aws_subnet" "subnet_1" {
   vpc_id            = aws_vpc.prod_vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = var.subnet_prefix[0].subnet
   availability_zone = "ap-northeast-1a"
 
   tags = {
-    Name = "subnet-1"
+    Name = var.subnet_prefix[0].name
+  }
+
+}
+resource "aws_subnet" "subnet_2" {
+  vpc_id            = aws_vpc.prod_vpc.id
+  cidr_block        = var.subnet_prefix[1].subnet
+  availability_zone = "ap-northeast-1a"
+
+  tags = {
+    Name = var.subnet_prefix[1].name
   }
 
 }
@@ -125,6 +145,7 @@ resource "aws_eip" "one" {
 
 # create a ubuntu server
 
+
 resource "aws_instance" "ec2-1" {
   ami               = "ami-088da9557aae42f39"
   instance_type     = "t2.micro"
@@ -147,6 +168,20 @@ resource "aws_instance" "ec2-1" {
   }
 }
 
+###OUTPUTS###
+# adding the output into the terraform
+output "server_public_ips" {
+  value = aws_eip.one.public_ip
+}
+
+output "ec2_info" {
+  value     = aws_instance.ec2-1.ami
+  sensitive = true
+}
+
+output "nic_info" {
+  value = aws_network_interface.web-server_nic.security_groups
+}
 
 # resource "aws_vpc" "my_vpc" {
 #   cidr_block = "10.0.0.0/16"

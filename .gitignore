@@ -5,3 +5,6 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
+*.auto.tfvars.*
+*.tfvars
+.terr*
